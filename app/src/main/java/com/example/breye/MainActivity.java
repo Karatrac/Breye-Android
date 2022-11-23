@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Attributs
+    ImageButton buttonplay,buttonlist,buttonsettings,buttonupload,buttontuto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,10 +21,11 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Récupération des boutons
-        ImageButton buttonplay = findViewById(R.id.play);
-        ImageButton buttonlist = findViewById(R.id.list);
-        ImageButton buttonsettings = findViewById(R.id.settings);
-        ImageButton buttonupload = findViewById(R.id.upload);
+         buttonplay = findViewById(R.id.play);
+         buttonlist = findViewById(R.id.list);
+         buttonsettings = findViewById(R.id.settings);
+         buttonupload = findViewById(R.id.upload);
+         buttontuto = findViewById(R.id.tuto);
 
 
         //Event listener
@@ -54,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttontuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToTuto();
+            }
+        });
+
     }
 
     public void goToSettings() {
@@ -74,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
     public void goToUpload() {
         Intent upload = new Intent(this, UploadActivity.class);
         startActivity(upload);
+    }
+
+    public void goToTuto() {
+        Intent tuto = new Intent(this, TutoActivity.class);
+        startActivity(tuto);
     }
 
 }
