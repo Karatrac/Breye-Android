@@ -14,8 +14,18 @@ public class Lettre implements Serializable {
     private int id;
     @ColumnInfo(name = "lettre")
     private char lettre;
-    @ColumnInfo(name = "lettreBraille")
-    private long lettreBraille;
+    @ColumnInfo(name = "l1")
+    private boolean l1;
+    @ColumnInfo(name = "l2")
+    private boolean l2;
+    @ColumnInfo(name = "l3")
+    private boolean l3;
+    @ColumnInfo(name = "l4")
+    private boolean l4;
+    @ColumnInfo(name = "l5")
+    private boolean l5;
+    @ColumnInfo(name = "l6")
+    private boolean l6;
 
     //Setteurs
 
@@ -27,8 +37,28 @@ public class Lettre implements Serializable {
         this.lettre = lettre;
     }
 
-    public void setLettreBraille(long lettreBraille) {
-        this.lettreBraille = lettreBraille;
+    public void setL1(boolean l1) {
+        this.l1 = l1;
+    }
+
+    public void setL2(boolean l2) {
+        this.l2 = l2;
+    }
+
+    public void setL3(boolean l3) {
+        this.l3 = l3;
+    }
+
+    public void setL4(boolean l4) {
+        this.l4 = l4;
+    }
+
+    public void setL5(boolean l5) {
+        this.l5 = l5;
+    }
+
+    public void setL6(boolean l6) {
+        this.l6 = l6;
     }
 
     //Getteurs
@@ -41,7 +71,27 @@ public class Lettre implements Serializable {
         return lettre;
     }
 
-    public long getLettreBraille() {
-        return lettreBraille;
+    public boolean isL1() {
+        return l1;
+    }
+
+    public boolean isL2() {
+        return l2;
+    }
+
+    public boolean isL3() {
+        return l3;
+    }
+
+    public boolean isL4() {
+        return l4;
+    }
+
+    public boolean isL5() {
+        return l5;
+    }
+
+    public boolean isL6() {
+        return l6;
     }
 }

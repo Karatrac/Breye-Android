@@ -8,6 +8,6 @@ import com.example.breye.Data.Lettre;
 @Database(entities = {Lettre.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract LettreDAO lettredao();
+    public abstract LettreDAO lettreDAO();
 
 }
