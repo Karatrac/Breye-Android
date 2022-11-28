@@ -5,7 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 
 @Entity
 public class Lettre implements Serializable {
@@ -13,7 +12,7 @@ public class Lettre implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "lettre")
-    private char lettre;
+    private String lettre;
     @ColumnInfo(name = "l1")
     private boolean l1;
     @ColumnInfo(name = "l2")
@@ -33,7 +32,7 @@ public class Lettre implements Serializable {
         this.id = id;
     }
 
-    public void setLettre(char lettre) {
+    public void setLettre(String lettre) {
         this.lettre = lettre;
     }
 
@@ -67,7 +66,7 @@ public class Lettre implements Serializable {
         return id;
     }
 
-    public char getLettre() {
+    public String getLettre() {
         return lettre;
     }
 

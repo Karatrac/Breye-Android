@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/claire">
 
-    <Button
+    <com.example.breye.ButtonPlay
         android:id="@+id/button1"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -85,12 +85,10 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
-        android:id="@+id/textLettre"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lettre"
-        android:clickable="true"
-        android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button4"

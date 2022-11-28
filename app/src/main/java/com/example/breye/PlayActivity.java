@@ -4,6 +4,7 @@ import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,12 +16,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.breye.Data.DataBase.DatabaseClient;
 import com.example.breye.Data.Lettre;
 
 import java.util.List;
+import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -33,6 +36,9 @@ public class PlayActivity extends AppCompatActivity {
             | android.R.attr.state_enabled};
     private static int[] defaultStates;
     private DatabaseClient mDb;
+    private Lettre l;
+    TextView tv;
+    private List<Lettre> LettreDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +55,15 @@ public class PlayActivity extends AppCompatActivity {
         b5 = findViewById(R.id.button5);
         b6 = findViewById(R.id.button6);
 
+        tv = findViewById(R.id.textLettre);
+
+        constraintLayout.setOnClickListener(v -> RandomLettre());
+
         // Récupération du DatabaseClient
         mDb = DatabaseClient.getInstance(getApplicationContext());
+
+        getLettres();
+
 
     }
 
@@ -62,19 +75,19 @@ public class PlayActivity extends AppCompatActivity {
         Log.d("Test", Boolean.toString(pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom())));
         Toast.makeText(this, "MOVE " + pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()), Toast.LENGTH_SHORT).show();
 
-        if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom())) {
+        if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1()) {
             vibrate();
-        } else if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom())) {
+        } else if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1()) {
             vibrate();
-        } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom())) {
+        } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom()) && l.isL2()) {
             vibrate();
-        } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom())) {
+        } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom()) && l.isL3()) {
             vibrate();
-        } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom())) {
+        } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom()) && l.isL4()) {
             vibrate();
-        } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom())) {
+        } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom()) && l.isL5()) {
             vibrate();
-        } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom())) {
+        } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom()) && l.isL6()) {
             vibrate();
         }
 
@@ -109,15 +122,67 @@ public class PlayActivity extends AppCompatActivity {
             protected void onPostExecute(final List<Lettre> lettresdb) {
                 super.onPostExecute(lettresdb);
 
-                System.out.println(lettresdb.size());
-                
+                LettreDb = lettresdb;
+                System.out.println(LettreDb.size());
+
+                RandomLettre();
             }
         }
 
         // Création d'un objet de type GetEleves et execution de la demande asynchrone
         GetLettres gu = new GetLettres();
         gu.execute();
+    }
 
+    public void initialisationVue() {
+        if (l != null) {
+            Log.d("Test Lettre", l.getLettre());
+            tv.setText(String.valueOf(l.getLettre()));
+            if (l.isL1()) {
+                b1.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b1.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+
+            if (l.isL2()) {
+                b2.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b2.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+
+            if (l.isL3()) {
+                b3.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b3.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+
+            if (l.isL4()) {
+                b4.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b4.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+
+            if (l.isL5()) {
+                b5.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b5.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+
+            if (l.isL6()) {
+                b6.setBackgroundResource(R.drawable.round_button_play);
+            } else {
+                b6.setBackgroundResource(R.drawable.round_button_stroke);
+            }
+        }
+    }
+
+    public void RandomLettre() {
+        Log.d("Test Lettre Apres", l.getLettre());
+        Random r = new Random();
+        int n = r.nextInt(26);
+
+        l = LettreDb.get(n);
+        initialisationVue();
     }
 
 }
