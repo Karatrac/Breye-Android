@@ -27,7 +27,6 @@ public class Lettre implements Serializable {
     private boolean l6;
 
     //Setteurs
-
     public void setId(int id) {
         this.id = id;
     }
@@ -61,7 +60,6 @@ public class Lettre implements Serializable {
     }
 
     //Getteurs
-
     public int getId() {
         return id;
     }

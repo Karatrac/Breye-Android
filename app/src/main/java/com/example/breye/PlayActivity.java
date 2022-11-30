@@ -1,12 +1,8 @@
 package com.example.breye;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,28 +13,23 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.breye.Data.DataBase.DatabaseClient;
 import com.example.breye.Data.Lettre;
 
 import java.util.List;
-import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity {
 
     // Attributs
     ConstraintLayout constraintLayout;
     Button b1, b2, b3, b4, b5, b6;
-    private final static int[] STATE_PRESSED = {
-        android.R.attr.state_pressed,
-        android.R.attr.state_focused
-            | android.R.attr.state_enabled};
-    private static int[] defaultStates;
     private DatabaseClient mDb;
     private Lettre l;
     TextView tv;
     private List<Lettre> LettreDb;
+    private Boolean bb1, bb2, bb3, bb4, bb5, bb6, nextLettre;
+    private int indexL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +37,10 @@ public class PlayActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_play);
 
+        // Récupération constraintLayout (tout l'écran)
         constraintLayout = findViewById(R.id.constraintLayoutPlay);
 
+        // Récupération des boutons
         b1 = findViewById(R.id.button1);
         b2 = findViewById(R.id.button2);
         b3 = findViewById(R.id.button3);
@@ -56,53 +49,136 @@ public class PlayActivity extends AppCompatActivity {
         b6 = findViewById(R.id.button6);
 
         tv = findViewById(R.id.textLettre);
+        tv.setVisibility(View.INVISIBLE);
 
-        constraintLayout.setOnClickListener(v -> RandomLettre());
+        // Non cliqué
+        bb1 = false;
+        bb2 = false;
+        bb3 = false;
+        bb4 = false;
+        bb5 = false;
+        bb6 = false;
+
 
         // Récupération du DatabaseClient
         mDb = DatabaseClient.getInstance(getApplicationContext());
 
+        // Initialisation variable
+        indexL = 2;
+        nextLettre =false;
+
         getLettres();
-
-
     }
 
 
     public boolean dispatchTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
 
-        Log.d("Test", Boolean.toString(pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom())));
-        Toast.makeText(this, "MOVE " + pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()), Toast.LENGTH_SHORT).show();
-
-        if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1()) {
-            vibrate();
-        } else if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1()) {
-            vibrate();
-        } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom()) && l.isL2()) {
-            vibrate();
-        } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom()) && l.isL3()) {
-            vibrate();
-        } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom()) && l.isL4()) {
-            vibrate();
-        } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom()) && l.isL5()) {
-            vibrate();
-        } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom()) && l.isL6()) {
-            vibrate();
+        // Click tous les boutons
+        if(bb1 && bb2 && bb3 && bb4 && bb5 && bb6){
+            tv.setVisibility(View.VISIBLE);
+            nextLettre =true;
         }
+
+        // get masked (not specific to a pointer) action
+        int maskedAction = event.getActionMasked();
+
+        switch (maskedAction) {
+
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE: {
+                // Récupération des coordonnées du point touché
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                // Si le point est cliqué est remplis
+                if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1()) {
+                    vibrate();
+                    bb1 = true;
+                } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom()) && l.isL2()) {
+                    vibrate();
+                    bb2 = true;
+                } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom()) && l.isL3()) {
+                    vibrate();
+                    bb3 = true;
+                } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom()) && l.isL4()) {
+                    vibrate();
+                    bb4 = true;
+                } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom()) && l.isL5()) {
+                    vibrate();
+                    bb5 = true;
+                } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom()) && l.isL6()) {
+                    vibrate();
+                    bb6 = true;
+                } else if (pointInside(x, y, tv.getLeft(), tv.getRight(), tv.getTop(), tv.getBottom()) && nextLettre) {
+                    RandomLettre();
+                }
+
+                // Si le point est cliqué mais pas remplis
+                if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && !l.isL1()) {
+                    bb1 = true;
+                } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom()) && !l.isL2()) {
+                    bb2 = true;
+                } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom()) && !l.isL3()) {
+                    bb3 = true;
+                } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom()) && !l.isL4()) {
+                    bb4 = true;
+                } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom()) && !l.isL5()) {
+                    bb5 = true;
+                } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom()) && !l.isL6()) {
+                    bb6 = true;
+                }
+
+                // One touch button
+              /*  if (pointInside(x, y, b1.getLeft(), b1.getRight(), b1.getTop(), b1.getBottom()) && l.isL1() && !bb1) {
+                    Log.d("Test 1", l.getLettre());
+                    vibrate();
+                    bb1 = true;
+                } else if (pointInside(x, y, b2.getLeft(), b2.getRight(), b2.getTop(), b2.getBottom()) && l.isL2() && !bb2) {
+                    Log.d("Test 2", l.getLettre());
+                    vibrate();
+                    bb2 = true;
+                } else if (pointInside(x, y, b3.getLeft(), b3.getRight(), b3.getTop(), b3.getBottom()) && l.isL3() && !bb3) {
+                    Log.d("Test 3", l.getLettre());
+                    vibrate();
+                    bb3 = true;
+                } else if (pointInside(x, y, b4.getLeft(), b4.getRight(), b4.getTop(), b4.getBottom()) && l.isL4() && !bb4) {
+                    Log.d("Test 4", l.getLettre());
+                    vibrate();
+                    bb4 = true;
+                } else if (pointInside(x, y, b5.getLeft(), b5.getRight(), b5.getTop(), b5.getBottom()) && l.isL5() && !bb5) {
+                    Log.d("Test 5", l.getLettre());
+                    vibrate();
+                    bb5 = true;
+                } else if (pointInside(x, y, b6.getLeft(), b6.getRight(), b6.getTop(), b6.getBottom()) && l.isL6() && !bb6) {
+                    Log.d("Test 6", l.getLettre());
+                    vibrate();
+                    bb6 = true;
+                } else if (pointInside(x, y, tv.getLeft(), tv.getRight(), tv.getTop(), tv.getBottom())) {
+                    RandomLettre();
+                }*/
+
+            }
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_CANCEL:
+        }
+
 
         return true;
     }
 
+    // Fonction pour voir si le point est dans un obet de la vue
     static boolean pointInside(int x, int y, int x1, int x2, int y1, int y2) {
         return (x <= x2 && x >= x1 && y <= y2 && y >= y1);
     }
 
+    // Vibration du téléphone
     public void vibrate() {
-        // Get instance of Vibrator from current Context
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        long[] pattern = {0, 1000};
+        //long[] pattern = {0, 500};
+        long[] pattern = {0, 70};
 
         vibrator.vibrate(pattern, -1);
     }
@@ -111,7 +187,8 @@ public class PlayActivity extends AppCompatActivity {
     private void getLettres() {
 
         // Classe asynchrone permettant de récupérer des comptes
-        class GetLettres extends AsyncTask<Void, Void, List<Lettre>> {
+        //TODO mise à jour possible de la tâche asynchrone car deprecated
+         class GetLettres extends AsyncTask<Void, Void, List<Lettre>> {
 
             @Override
             protected List<Lettre> doInBackground(Void... voids) {
@@ -123,8 +200,8 @@ public class PlayActivity extends AppCompatActivity {
                 super.onPostExecute(lettresdb);
 
                 LettreDb = lettresdb;
-                System.out.println(LettreDb.size());
-
+                // OnClick ne marche pas car on modifie le touchEvent en dispatch
+                //tv.setOnClickListener(v -> RandomLettre());
                 RandomLettre();
             }
         }
@@ -174,15 +251,38 @@ public class PlayActivity extends AppCompatActivity {
                 b6.setBackgroundResource(R.drawable.round_button_stroke);
             }
         }
+
+        bb1 = false;
+        bb2 = false;
+        bb3 = false;
+        bb4 = false;
+        bb5 = false;
+        bb6 = false;
+
+        tv.setVisibility(View.INVISIBLE);
     }
 
     public void RandomLettre() {
-        Log.d("Test Lettre Apres", l.getLettre());
-        Random r = new Random();
-        int n = r.nextInt(26);
 
-        l = LettreDb.get(n);
+        // Affichage aléatoire des lettres
+       /* Random r = new Random();
+        int n = r.nextInt(26);*/
+
+        nextLettre=false;
+        indexABC();
+        l = LettreDb.get(indexL);
+
         initialisationVue();
+    }
+
+
+    // Restreindre l'affichage aux lettres ABC pour le test
+    public void indexABC() {
+        if (indexL < 2) {
+            indexL++;
+        } else {
+            indexL = 0;
+        }
     }
 
 }

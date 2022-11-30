@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(tuto);
     }
 
-    //Récupération des lettres
+    //Initialisation des lettres lors du lancement
     private void getLettres() {
 
         // Classe asynchrone permettant de récupérer des comptes
